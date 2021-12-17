@@ -1,5 +1,6 @@
 package projeto_dao_jdbc;
 
+import java.util.Date;
 import java.util.List;
 import model.dao.DaoFactory;
 import model.dao.SellerDao;
@@ -26,6 +27,18 @@ public class Projeto_dao_jdbc {
                 for(Seller obj: list){
                     System.out.println(obj);
                 }
+                
+    System.out.println("=== TEST 4: seller Insert ====");
+    Seller newSeller = new Seller(null, "Greg", "greg@gmail.com", new Date(), 4000.0, department);
+    sellerDao.insert(newSeller);
+    System.out.println("Inserted! New id = " + newSeller.getId());
+    
+    
+    
+    
+    
+    
+    
     
 }
 }
