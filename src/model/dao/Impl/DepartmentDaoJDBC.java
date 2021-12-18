@@ -7,6 +7,7 @@ import java.util.List;
 import java.sql.*;
 import model.dao.DepartmentDao;
 import model.entities.Department;
+import model.entities.Seller;
 
 public class DepartmentDaoJDBC implements DepartmentDao{
     private Connection conn;
@@ -19,6 +20,7 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 
     @Override
     public void insert(Department obj) {
+        
         PreparedStatement st = null;
         
         try {
@@ -54,7 +56,24 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 
     @Override
     public void update(Department obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement st = null;
+        
+        try {
+            st = conn.prepareStatement("UPDATE department SET Id = ?, Name = ? WHERE Id = ? ", Statement.RETURN_GENERATED_KEYS);
+            
+            st.setInt(1, obj.getId());
+            st.setString(2, obj.getName());
+            st.setInt(3, obj.getId());
+            st.executeUpdate();
+            
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+            
+        }
+        finally{
+            DB.CloseStatement(st);
+        }
+       
     }
 
     @Override
@@ -62,15 +81,38 @@ public class DepartmentDaoJDBC implements DepartmentDao{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public Department findById(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+   @Override
+	public Department findById(Integer id) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement(
+				"SELECT * FROM department WHERE Id = ?");
+			st.setInt(1, id);
+			rs = st.executeQuery();
+			if (rs.next()) {
+				Department obj = new Department();
+				obj.setId(rs.getInt("Id"));
+				obj.setName(rs.getString("Name"));
+				return obj;
+			}
+			return null;
+		}
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.CloseStatement(st);
+			DB.CloseResultSet(rs);
+		}
+	}
 
     @Override
     public List<Department> findAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+
     
     
     
