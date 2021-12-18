@@ -2,6 +2,7 @@ package projeto_dao_jdbc;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 import model.dao.DaoFactory;
 import model.dao.SellerDao;
 import model.entities.Department;
@@ -10,6 +11,8 @@ import model.entities.Seller;
 public class Projeto_dao_jdbc {
     public static void main(String[] args) {
     SellerDao sellerDao = DaoFactory.createSellerdao();
+    
+    Scanner sc = new Scanner(System.in);
     
     System.out.println("=== TEST 1: seller findById ====");
     Seller seller = sellerDao.findById(3);
@@ -52,6 +55,19 @@ public class Projeto_dao_jdbc {
     seller.setName("Marthe Wayne");
     sellerDao.update(seller);
     System.out.println("Update completed");
+    
+    System.out.println("");
+    System.out.println("------------------------------------------------------------------------------------");
+    
+    
+    System.out.println("=== TEST 5: seller Delete ==== ");
+    System.out.println("Ebnter id for delete test: ");
+    int id = sc.nextInt();
+    sellerDao.deleteById(id);
+    System.out.println("Deleted completed");
+    sc.close();
+    
+        
     
     
     
