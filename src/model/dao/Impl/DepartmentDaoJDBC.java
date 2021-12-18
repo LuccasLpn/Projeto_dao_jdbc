@@ -5,6 +5,7 @@ import ex.DbException;
 import java.sql.Connection;
 import java.util.List;
 import java.sql.*;
+import java.util.ArrayList;
 import model.dao.DepartmentDao;
 import model.entities.Department;
 
@@ -14,8 +15,6 @@ public class DepartmentDaoJDBC implements DepartmentDao{
     public DepartmentDaoJDBC(Connection conn) {
         this.conn = conn;
     }
-    
-
 
     @Override
     public void insert(Department obj) {
@@ -129,8 +128,40 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 
     @Override
     public List<Department> findAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        
+    try {
+            st = conn.prepareStatement("select * from department order by Name");
+            rs = st.executeQuery();
+            
+            List<Department> list = new ArrayList<>();
+
+            
+            while (rs.next()) {
+                                  Department obj = new Department();
+                                  obj.setId(rs.getInt("Id"));
+                                  obj.setName(rs.getString("Name"));
+                                  list.add(obj);
+                          }
+            
+                          return list;
+            
+      
+            
+        } catch (SQLException e) {
+            
+            throw new DbException(e.getMessage());
+        }
+        
+        finally{
+            
+            DB.CloseStatement(st);
+            DB.closeConnection();
+            
+        }
     }
+
 
 
     
